@@ -1,4 +1,4 @@
-from init_database import TweetDB
+from database import TweetDB
 from loader import save_user_tweets, get_list
 
 #purge the storage database before reload tweets

@@ -6,8 +6,8 @@ import tweepy
 from sqlalchemy.orm import sessionmaker
 from tweepy import OAuthHandler, StreamListener, API
 
-from init_database import Tweet
-from init_database import TweetDB
+from database import Tweet
+from database import TweetDB
 
 cur_path = os.path.dirname(__file__)
 par_path = os.path.dirname(cur_path)
