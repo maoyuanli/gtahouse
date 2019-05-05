@@ -55,9 +55,9 @@ def get_list():
 
 
 # load the tweets of the news outlets into sqlite3 database
-def save_user_tweets(screen_name, since):
+def save_user_tweets(screen_name):
     api = API(auth)
-    tweets = tweepy.Cursor(api.user_timeline, screen_name=screen_name, tweet_mode='extended', since=since).items(1000)
+    tweets = tweepy.Cursor(api.user_timeline, screen_name=screen_name, tweet_mode='extended').items(1000)
     tweetdb = TweetDB()
     engine = tweetdb.get_engine()
     conn = engine.connect()

@@ -10,4 +10,4 @@ conn.execute('delete from tweets;')
 #populate the "tweets" sqlite db table
 news_list = get_list()
 for member in news_list:
-    save_user_tweets(screen_name=member,since='2019-01-01')
+    save_user_tweets(screen_name=member)
