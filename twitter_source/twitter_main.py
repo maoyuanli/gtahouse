@@ -1,8 +1,8 @@
-from database import TweetDB
-from loader import save_user_tweets, get_list
+from twitter_source.database import DatabaseUtil
+from twitter_source.loader import save_user_tweets, get_list
 
 #purge the storage database before reload tweets
-tweetdb = TweetDB()
+tweetdb = DatabaseUtil()
 engine = tweetdb.get_engine()
 conn = engine.connect()
 conn.execute('delete from tweets;')

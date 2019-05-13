@@ -3,9 +3,10 @@ import os
 from sqlalchemy import create_engine, Column, Integer, TEXT
 from sqlalchemy.ext.declarative import declarative_base
 
-database_name = 'tweets.db'
+database_name = 'datalake.db'
 cur_path = os.path.dirname(__file__)
-database_file = os.path.join(os.path.abspath(cur_path), database_name)
+par_path = os.path.dirname(cur_path)
+database_file = os.path.join(os.path.abspath(par_path), database_name)
 db_url = 'sqlite:///{0}'.format(database_file)
 conn = create_engine(db_url)
 Base = declarative_base(bind=conn)
@@ -21,7 +22,7 @@ class Tweet(Base):
 
 
 # sqlite database file utility class
-class TweetDB:
+class DatabaseUtil:
     tweet = Tweet()
 
     def init_db(self):
@@ -32,6 +33,6 @@ class TweetDB:
         engine = create_engine(db_url)
         return engine
 
-# initialize/create tweets.db
-tdb = TweetDB()
+# initialize/create datalake.db
+tdb = DatabaseUtil()
 tdb.init_db()

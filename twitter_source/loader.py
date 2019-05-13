@@ -6,11 +6,11 @@ import tweepy
 from sqlalchemy.orm import sessionmaker
 from tweepy import OAuthHandler, StreamListener, API
 
-from database import Tweet
-from database import TweetDB
+from twitter_source.database import Tweet
+from twitter_source.database import DatabaseUtil
 
 cur_path = os.path.dirname(__file__)
-par_path = os.path.dirname(cur_path)
+par_path = os.path.dirname(os.path.dirname(cur_path))
 u_dont_need2know = os.path.join(par_path, 'twiken.json')
 
 token = json.load(open(u_dont_need2know, 'r'))
@@ -58,7 +58,7 @@ def get_list():
 def save_user_tweets(screen_name):
     api = API(auth)
     tweets = tweepy.Cursor(api.user_timeline, screen_name=screen_name, tweet_mode='extended').items(1000)
-    tweetdb = TweetDB()
+    tweetdb = DatabaseUtil()
     engine = tweetdb.get_engine()
     conn = engine.connect()
     Session = sessionmaker(bind=conn)
