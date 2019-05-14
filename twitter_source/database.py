@@ -1,6 +1,6 @@
 import os
 
-from sqlalchemy import create_engine, Column, Integer, TEXT
+from sqlalchemy import create_engine, Column, Integer, TEXT, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 
 database_name = 'datalake.db'
@@ -13,17 +13,23 @@ Base = declarative_base(bind=conn)
 
 
 # database table model
-class Tweet(Base):
-    __tablename__ = 'tweets'
+class SearchTweets(Base):
+    __tablename__ = 'searchtweets'
     id = Column(Integer, nullable=False, primary_key=True)
     author = Column(TEXT, nullable=False)
     tweet = Column(TEXT, nullable=False)
-    timestamp = Column(TEXT, nullable=False)
+    time = Column(TEXT, nullable=False)
 
+class NewsTweets(Base):
+    __tablename__ = 'newstweets'
+    id = Column(Integer, nullable=False, primary_key=True)
+    author = Column(TEXT, nullable=False)
+    tweet = Column(TEXT, nullable=False)
+    time = Column(TEXT, nullable=False)
 
 # sqlite database file utility class
 class DatabaseUtil:
-    tweet = Tweet()
+    # tweet = Tweet()
 
     def init_db(self):
         if not os.path.isfile(database_file):

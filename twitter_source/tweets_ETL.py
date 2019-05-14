@@ -6,7 +6,7 @@ import tweepy
 from sqlalchemy.orm import sessionmaker
 from tweepy import OAuthHandler, StreamListener, API
 
-from twitter_source.database import Tweet
+from twitter_source.database import NewsTweets, SearchTweets
 from twitter_source.database import DatabaseUtil
 
 cur_path = os.path.dirname(__file__)
@@ -55,7 +55,7 @@ def get_list():
 
 
 # load the tweets of the news outlets into sqlite3 database
-def save_user_tweets(screen_name):
+def save_newstweets(screen_name):
     api = API(auth)
     tweets = tweepy.Cursor(api.user_timeline, screen_name=screen_name, tweet_mode='extended').items(1000)
     tweetdb = DatabaseUtil()
@@ -65,9 +65,27 @@ def save_user_tweets(screen_name):
     session = Session()
     for tweet in tweets:
         if not 'RT @' in tweet.full_text:
-            tweet_row = Tweet(id=tweet.id_str,
+            tweet_row = NewsTweets(id=tweet.id_str,
                               author=tweet.author.screen_name,
                               tweet=tweet.full_text,
-                              timestamp=tweet.created_at)
+                              time=tweet.created_at)
+            session.add(tweet_row)
+            session.commit()
+
+def save_searchtweets():
+    api = API(auth)
+    search_query = '(Toronto OR GTA OR Ontario) AND (real estate OR housing OR home sales OR house market)'
+    tweets = tweepy.Cursor(api.search, q=search_query, tweet_mode='extended').items(1500)
+    tweetdb = DatabaseUtil()
+    engine = tweetdb.get_engine()
+    conn = engine.connect()
+    Session = sessionmaker(bind=conn)
+    session = Session()
+    for tweet in tweets:
+        if not 'RT @' in tweet.full_text:
+            tweet_row = SearchTweets(id=tweet.id_str,
+                                   author=tweet.author.screen_name,
+                                   tweet=tweet.full_text,
+                                   time=tweet.created_at)
             session.add(tweet_row)
             session.commit()
