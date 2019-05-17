@@ -17,3 +17,11 @@ class RealmasterItem(scrapy.Item):
         input_processor=MapCompose(str.strip),
         output_processor=TakeFirst()
     )
+    city = scrapy.Field(
+        input_processor=MapCompose(str.strip),
+        output_processor=TakeFirst()
+    )
+    proptype = scrapy.Field(
+        input_processor=MapCompose(str.strip),
+        output_processor=TakeFirst()
+    )

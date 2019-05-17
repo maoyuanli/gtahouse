@@ -2,6 +2,7 @@ import os
 
 from sqlalchemy import create_engine, Column, Integer, TEXT, String
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
 
 database_name = 'datalake.db'
 cur_path = os.path.dirname(__file__)
@@ -33,6 +34,17 @@ class DatabaseUtil:
     def get_engine(self):
         engine = create_engine(db_url)
         return engine
+
+    def get_conn(self):
+        engine = self.get_engine()
+        conn = engine.connect()
+        return conn
+
+    def create_session(self):
+        conn = self.get_conn()
+        Session = sessionmaker(bind=conn)
+        session = Session()
+        return session
 
 # initialize/create datalake.db
 if __name__ == '__main__':

@@ -5,8 +5,8 @@ import tweepy
 from sqlalchemy.orm import sessionmaker
 from tweepy import OAuthHandler, API
 
-from twitter_source.database_util import DatabaseUtil
-from twitter_source.database_util import Tweets
+from utils.database_util import DatabaseUtil
+from utils.database_util import Tweets
 
 cur_path = os.path.dirname(__file__)
 par_path = os.path.dirname(os.path.dirname(cur_path))
@@ -20,13 +20,13 @@ auth.set_access_token(token['access_token'], token['access_secret'])
 api = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
 
 
-def create_session():
-    tweetdb = DatabaseUtil()
-    engine = tweetdb.get_engine()
-    conn = engine.connect()
-    Session = sessionmaker(bind=conn)
-    session = Session()
-    return session
+# def create_session():
+#     tweetdb = DatabaseUtil()
+#     engine = tweetdb.get_engine()
+#     conn = engine.connect()
+#     Session = sessionmaker(bind=conn)
+#     session = Session()
+#     return session
 
 
 def save_listedtweets(*args):
@@ -44,12 +44,12 @@ def get_list(list_name):
         watch_list.append(member.screen_name)
     return watch_list
 
-
+DButil = DatabaseUtil()
 # load the tweets of the user's tweets into sqlite3 database
 def save_usertweets(screen_name, type):
     api = API(auth)
     tweets = tweepy.Cursor(api.user_timeline, screen_name=screen_name, tweet_mode='extended').items(1000)
-    session = create_session()
+    session = DButil.create_session()
     for tweet in tweets:
         if not 'RT @' in tweet.full_text:
             tweet_row = Tweets(id=tweet.id_str,
@@ -66,7 +66,7 @@ def save_searchtweets():
     api = API(auth)
     search_query = '(Toronto OR GTA OR Ontario) AND (real estate OR housing OR home sales OR house market)'
     tweets = tweepy.Cursor(api.search, q=search_query, tweet_mode='extended').items(1500)
-    session = create_session()
+    session = DButil.create_session()
     for tweet in tweets:
         if not 'RT @' in tweet.full_text:
             tweet_row = Tweets(id=tweet.id_str,
@@ -76,3 +76,23 @@ def save_searchtweets():
                                type='search')
             session.add(tweet_row)
             session.commit()
+
+
+def purge_table(table_name):
+    conn = DButil.get_conn()
+    query = 'delete from {0};'.format(table_name)
+    conn.execute(query)
+
+
+def populate_table():
+    save_listedtweets('biznews', 'realtor')
+    save_searchtweets()
+
+
+def main():
+    purge_table('tweets')
+    populate_table()
+
+
+if __name__ == '__main__':
+    main()

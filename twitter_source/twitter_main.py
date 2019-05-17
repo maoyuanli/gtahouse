@@ -1,4 +1,4 @@
-from twitter_source.database_util import DatabaseUtil
+from utils.database_util import DatabaseUtil
 from twitter_source.tweets_ETL import save_listedtweets, save_searchtweets
 
 
@@ -15,6 +15,9 @@ def populate_table():
     save_searchtweets()
 
 
-if __name__ == '__main__':
+def main():
     purge_table('tweets')
     populate_table()
+
+if __name__ == '__main__':
+    main()
