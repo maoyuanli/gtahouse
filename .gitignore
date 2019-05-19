@@ -3,3 +3,6 @@
 *.iml
 .ipynb_checkpoints/sentrendus_report-checkpoint.ipynb
 *.pyc
+tweets.db
+*.db
+.ipynb_checkpoints/gta_house_market_report-checkpoint.ipynb
