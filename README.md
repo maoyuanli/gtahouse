@@ -1,2 +1,2 @@
-WORK IN PROGRESS: 
-Analyze the tweets of verified news outlets to get insight of current economy sentiment, trend and status.
+WORK IN PROGRESS: <br>
+To analyze the sentiment, trend and status of the residential real estate market in GTA area.
