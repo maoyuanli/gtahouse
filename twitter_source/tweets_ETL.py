@@ -1,32 +1,20 @@
-import json
-import os
-
 import tweepy
-from sqlalchemy.orm import sessionmaker
 from tweepy import OAuthHandler, API
 
 from utils.database_util import DatabaseUtil
 from utils.database_util import Tweets
+from utils.fetch_token import TokenFetcher
 
-cur_path = os.path.dirname(__file__)
-par_path = os.path.dirname(os.path.dirname(cur_path))
-u_dont_need2know = os.path.join(par_path, 'twiken.json')
+tf = TokenFetcher('token.json')
+api_key = tf.fetch_token('api_key')
+api_secret = tf.fetch_token('api_secret')
+access_token = tf.fetch_token('access_token')
+access_secret = tf.fetch_token('access_secret')
 
-token = json.load(open(u_dont_need2know, 'r'))
-
-auth = OAuthHandler(token['api_key'], token['api_secret'])
-auth.set_access_token(token['access_token'], token['access_secret'])
+auth = OAuthHandler(api_key, api_secret)
+auth.set_access_token(access_token, access_secret)
 
 api = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
-
-
-# def create_session():
-#     tweetdb = DatabaseUtil()
-#     engine = tweetdb.get_engine()
-#     conn = engine.connect()
-#     Session = sessionmaker(bind=conn)
-#     session = Session()
-#     return session
 
 
 def save_listedtweets(*args):
@@ -44,7 +32,10 @@ def get_list(list_name):
         watch_list.append(member.screen_name)
     return watch_list
 
+
 DButil = DatabaseUtil()
+
+
 # load the tweets of the user's tweets into sqlite3 database
 def save_usertweets(screen_name, type):
     api = API(auth)
