@@ -10,10 +10,21 @@ class TokenFetcher():
     def __init__(self, token_file):
         self.token_file = token_file
 
+    @property
+    def token_file(self):
+        return self._token_file
+
+    @token_file.setter
+    def token_file(self, token_file):
+        if '.json' in token_file:
+            self._token_file = token_file
+        else:
+            raise ValueError('Token File must be in json format')
+
     def fetch_token(self, key):
         cur_path = os.path.dirname(__file__)
         par_path = os.path.dirname(os.path.dirname(cur_path))
-        while os.path.isfile(os.path.join(par_path, self.token_file)) == False:
+        while os.path.isfile(os.path.join(par_path, self._token_file)) == False:
             par_path = os.path.dirname(os.path.dirname(par_path))
-        token = json.load(open(os.path.join(par_path, self.token_file), 'r'))
+        token = json.load(open(os.path.join(par_path, self._token_file), 'r'))
         return token[key]
