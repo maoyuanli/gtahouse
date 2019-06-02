@@ -17,7 +17,7 @@ auth.set_access_token(access_token, access_secret)
 api = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
 
 
-def save_listedtweets(*args):
+def save_listedtweets(*args:'twitter list name(s)'):
     for arg in args:
         tlist = get_list(arg)
         for member in tlist:
@@ -37,7 +37,7 @@ DButil = DatabaseUtil()
 
 
 # load the tweets of the user's tweets into sqlite3 database
-def save_usertweets(screen_name, type):
+def save_usertweets(screen_name, type:'flag/category of the tweet, i.e. search, list'):
     api = API(auth)
     tweets = tweepy.Cursor(api.user_timeline, screen_name=screen_name, tweet_mode='extended').items(1000)
     session = DButil.create_session()

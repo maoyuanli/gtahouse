@@ -1,6 +1,7 @@
 from tweepy import StreamListener
 from time import sleep
 
+# for streaming
 class Listener(StreamListener):
 
     def on_status(self, status):
